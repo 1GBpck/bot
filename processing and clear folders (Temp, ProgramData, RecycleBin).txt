@@ -1,0 +1,29 @@
+@echo off
+color a
+title 1qBpck
+chcp 65001
+
+echo Ваши процессы
+tasklist
+
+echo ---------------------------------------------------------------------------------------------
+echo Очистка папки Temp (временных файлов)...
+timeout /t 2 /nobreak > nul
+rd /s /q "%temp%"
+mkdir "%temp%"
+
+echo Очистка Корзины...
+timeout /t 2 /nobreak > nul
+echo Y | PowerShell -NoProfile -Command "Clear-RecycleBin"
+
+echo Очистка мусора в папке ProgramData...
+timeout /t 2 /nobreak > nul
+for /f "delims=" %%a in ('dir /s /b "%ProgramData%\*" 2^>nul') do (
+ if "%%~xa" == ".tmp" (
+  echo Удаление: %%a
+  del /q "%%a" 2>nul
+ )
+)
+
+echo Операция завершена.
+pause
